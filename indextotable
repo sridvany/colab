@@ -1,0 +1,28 @@
+import yfinance as yf
+import pandas as pd
+
+# Hisse ve tarih
+symbol = "IMOEX"
+start_date = "2015-01-01"
+end_date = "2025-01-01"
+
+# Veriyi çek (Adj Close için auto_adjust=False)
+data = yf.download(symbol, start=start_date, end=end_date, auto_adjust=False)
+
+# Sayıları 4 ondalık basamağa yuvarla
+data = data.round(4)
+
+# Tarih indeksini datetime.date formatına çevir
+data.index = data.index.date
+
+# İlk 15 satırı göster
+print("İlk 15 satır:")
+print(data.head(15))
+
+# Excel'e yaz
+filename = f"{symbol.replace('^', '')}_data.xlsx"
+data.to_excel(filename, index_label="Date")
+
+# Colab üzerinden indirme
+from google.colab import files
+files.download(filename)
